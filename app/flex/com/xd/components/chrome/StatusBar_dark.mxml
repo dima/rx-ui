@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="22" paddingRight="2" verticalAlign="bottom"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	xmlns:sync="com.xd.components.sync.*" >
+	
+	<mx:Script>
+        <![CDATA[
+        	import mx.managers.PopUpManager;
+        	import com.xd.components.sync.Synchronize_dark;      
+            import flash.geom.Point;
+
+            private var point1:Point = new Point();
+            private var myMenu:Synchronize_dark;
+   
+            // Create and display the Menu control.
+            private function showMenu():void {
+                myMenu= new Synchronize_dark();
+                var p:Point = localToGlobal( new Point(online.x, online.y));
+                myMenu.x = p.x+2;
+                myMenu.y = p.y-171;
+                
+                PopUpManager.addPopUp(myMenu,this);
+            }
+
+        ]]>
+    </mx:Script>
+    
+    <!-- Synchronization -->
+	<mx:ViewStack id="synchro" paddingTop="0"  >
+		
+		<!-- ONLINE -->
+		<mx:HBox id="online" width="100%" height="22" verticalAlign="middle" verticalScrollPolicy="off" horizontalScrollPolicy="off" horizontalGap="5" 
+			paddingLeft="5" paddingTop="0" click="showMenu();" buttonMode="true" mouseEnabled="true" useHandCursor="true" >
+			<mx:HBox width="90" height="18" verticalAlign="middle" verticalScrollPolicy="off" horizontalScrollPolicy="off" horizontalGap="5" paddingLeft="0" paddingTop="0" >
+				<mx:Image source="@Embed(source='/assets/sync/sync_dark.swf', symbol='icon_online')" mouseDown="{synchro.selectedIndex=1}" />
+				<mx:Label height="16" text="Connected" styleName="sync" buttonMode="true" mouseEnabled="true" useHandCursor="true" />
+				<mx:Spacer width="100%" />
+				<mx:Image source="@Embed('/assets/skins/dark/sortArrowSkin.png')" />
+			</mx:HBox>
+			<mx:VRule height="100%" strokeWidth="2" strokeColor="#111111" shadowColor="#282828" />
+			<mx:Label height="16" text="Last Synchronized at 3:35 PM" styleName="sync" />
+		</mx:HBox>
+		
+		<!-- OFFLINE -->
+		<mx:HBox id="offline" width="100%" height="22" verticalAlign="middle" verticalScrollPolicy="off" horizontalScrollPolicy="off" horizontalGap="5" 
+			paddingLeft="5" paddingTop="0" click="showMenu();" buttonMode="true" mouseEnabled="true" useHandCursor="true" >
+			<mx:HBox width="90" height="18" verticalAlign="middle" verticalScrollPolicy="off" horizontalScrollPolicy="off" horizontalGap="5" paddingLeft="0" paddingTop="0" >
+				<mx:Image source="@Embed(source='/assets/sync/sync_dark.swf', symbol='icon_offline')" mouseDown="{synchro.selectedIndex=2}" />
+				<mx:Label height="16" text="Offline" styleName="sync" buttonMode="true" mouseEnabled="true" useHandCursor="true" />
+				<mx:Spacer width="100%" />
+				<mx:Image source="@Embed('/assets/skins/dark/sortArrowSkin.png')" />
+			</mx:HBox>
+			<mx:VRule height="100%" strokeWidth="2" strokeColor="#111111" shadowColor="#282828" />
+			<mx:Label height="16" text="Last Synchronized at 3:35 PM" styleName="sync" />
+		</mx:HBox>
+		
+		<!-- SYNCHRONIZING -->
+		<mx:HBox id="synchronizing" width="100%" height="22" verticalAlign="middle" verticalScrollPolicy="off" horizontalScrollPolicy="off" horizontalGap="5" 
+			paddingLeft="5" paddingTop="0" click="showMenu();" buttonMode="true" mouseEnabled="true" useHandCursor="true" >
+			<mx:Canvas width="90" height="18" verticalScrollPolicy="off" horizontalScrollPolicy="off" >
+				<mx:Image top="4" left="0"  source="@Embed(source='/assets/sync/sync_dark.swf', symbol='icon_syncronizing')" mouseDown="{synchro.selectedIndex=0}" buttonMode="true" mouseEnabled="true" useHandCursor="true" />
+				<mx:Image top="7" right="0" source="@Embed('/assets/skins/dark/sortArrowSkin.png')" />
+			</mx:Canvas>
+			<mx:VRule height="100%" strokeWidth="2" strokeColor="#111111" shadowColor="#282828" />
+			<mx:Label height="16" text="Synchronizing..." styleName="sync" />
+		</mx:HBox>
+		
+	</mx:ViewStack>
+	
+	<mx:Spacer width="100%" />
+	
+	<mx:Box height="20" verticalAlign="bottom" paddingBottom="2" >
+		<!--<mx:Image source="@Embed('/assets/skins/dark/icon_gripper.png')" mouseDown="stage.nativeWindow.startResize()" buttonMode="true" mouseEnabled="true" useHandCursor="false" />-->
+	</mx:Box>
+	
+	
+</mx:HBox>

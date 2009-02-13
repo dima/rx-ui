@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+	showFlexChrome="false" showStatusBar="false" showGripper="true" showTitleBar="false"
+	initialize="init(event);" preinitialize="updateScreenPosition(event)"
+	width="780" height="580" frameRate="45"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	xmlns:loader="assets.loader.*"
+	preloader="assets.loader.CustomPreloader"
+	xmlns:chrome="com.xd.components.chrome.*" 
+	xmlns:sync="com.xd.components.sync.*"
+	xmlns:main="rxui.components.main.*"
+	xmlns:merapi="merapi.*">
+	<merapi:BridgeInstance id="bridge"/>
+	<mx:Style source="assets/xd_dark.css" />
+	
+	<mx:Script>
+		<![CDATA[
+			import org.restfulx.Rx;
+			import rxui.controllers.GenerationController;
+			import org.restfulx.services.air.AIRServiceProvider;
+			import rxui.controllers.ApplicationController;
+			import mx.collections.ArrayCollection;
+			import mx.core.UIComponent;
+		
+			import mx.controls.Image;
+			import mx.rpc.events.ResultEvent;
+			import merapi.messages.*;
+			import flash.filesystem.*;
+			import flash.net.URLRequest;
+			
+			// shortcut functions
+      public static function get gen():GenerationController {
+        return GenerationController.instance;
+      }
+			
+			// ######################################
+			// Embed SystemTray Icons
+			// ######################################
+      
+      /* [Embed(source='/assets/appicons/16.png')]
+			private static var sysTrayIcon16:Class;
+			
+			[Embed(source='/assets/appicons/128.png')]
+			private static var sysTrayIcon128:Class; */
+			
+			// ######################################
+			// Determine Screen Dimensions
+			// ######################################
+			public var mainScreen:Screen = Screen.mainScreen as Screen;
+      public var visibleBounds:Rectangle = mainScreen.visibleBounds as Rectangle;
+        	
+    	// ######################################
+    	// INIT Function
+    	// ######################################
+    	public function updateScreenPosition(evt:Event):void {
+    		// Center Application
+        nativeWindow.x = Math.round((visibleBounds.width - nativeWindow.width) * .5);
+        nativeWindow.y = Math.round((visibleBounds.height - nativeWindow.height) * .5);
+    	}
+        	
+    	public function init(event:Event):void {
+    		Rx.enableLogging();
+    		ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "rxui");
+    		
+    		// Fake out message to merapi
+    		var message:Message = new Message();
+				message.type = "RunScript";
+				bridge.sendMessage(message);
+    		
+    		this.orderToFront();
+    		this.activate();
+    		
+				// Setup Dock or SystemTray Icons
+				setupSystemIcons();
+    	}
+    	
+			// ######################################
+			// Dock, NativeMenu & SystemsTray Menus
+			// ######################################
+        	
+    	// Create DockIcon Contextual Menu Items
+      private function createContextMenu():NativeMenu {
+				var menu : NativeMenu = new NativeMenu();
+				var item : NativeMenuItem = new NativeMenuItem( "Rx-Ui" );
+				item.name = "Rx-Ui";
+				menu.addItem( item );
+				menu.addEventListener( Event.SELECT, onMenuSelect );
+				return menu;
+			}
+
+    	// DockIcon Contextual Menu Item Events
+			private function onMenuSelect(event:Event):void {
+				trace("onMenuSelect()");
+				if (event.target.name == "Rx-Ui") {
+					nativeWindow.visible = true;
+					nativeWindow.restore();
+					nativeWindow.orderToFront();
+				}
+			}
+			
+			private function onNativeMenuSelect(event:Event):void {
+				trace("onNativeMenuSelect: " + event);
+				if (event.target.label == "Rx-Ui") {
+					nativeWindow.visible = true;
+					nativeWindow.restore();
+					nativeWindow.orderToFront();
+				}
+			}
+			
+      // Create NativeMenu
+			public function createNativeMenu():void {
+	      var men:NativeMenu = NativeApplication.nativeApplication.menu;
+	    	for (var i:Number = 0; i<men.numItems; i++){
+	    		if(men.items[i].label == "Window"){
+	    			var windowMenu:NativeMenuItem = men.items[i];
+	    		}
+	    	}
+				windowMenu.submenu = createWindowMenu();
+	    }
+	        
+      // Create NativeMenu Items
+	    public function createWindowMenu():NativeMenu {
+				var windowMenu:NativeMenu = new NativeMenu();
+				var menuItem:NativeMenuItem = new NativeMenuItem("Rx-Ui");
+				menuItem.name = "Rx-Ui";
+				windowMenu.addItem(menuItem);
+				menuItem.addEventListener( Event.SELECT, onNativeMenuSelect);
+				trace("menuItem = "+ menuItem);
+				return windowMenu;
+	    }
+	        
+	    // SystemTray Setup
+	    private function setupSystemIcons():void {
+	    	if (NativeApplication.supportsSystemTrayIcon) {
+					var icon : SystemTrayIcon = NativeApplication.nativeApplication.icon as SystemTrayIcon;
+					icon.tooltip = "Rx-Ui";
+					/* icon.bitmaps = [ (new sysTrayIcon16() as Bitmap).bitmapData, (new sysTrayIcon128() as Bitmap).bitmapData ]; */
+					icon.menu = createWindowMenu();
+					icon.addEventListener( "click", function(event:Event):void {
+						nativeWindow.visible = true;
+						nativeWindow.restore();
+						nativeWindow.orderToFront();
+					});
+	
+					var exitCommand:NativeMenuItem = icon.menu.addItem(new NativeMenuItem("Exit"));
+					exitCommand.addEventListener(Event.SELECT, function(event:Event):void {
+						nativeApplication.exit();
+					});
+				}
+				
+				if (NativeApplication.supportsDockIcon) {
+					// Generate Dock Icon Contextual Menu
+        	var dockIcon : DockIcon = NativeApplication.nativeApplication.icon as DockIcon;
+					dockIcon.menu = createContextMenu();
+					createNativeMenu();
+				}
+	    }
+				
+		]]>
+	</mx:Script>
+	
+	<!-- Application Custom Chrome -->
+	<chrome:CustomChrome top="0" bottom="0" left="0" right="0" />
+	
+	<!-- ContentBackgroundArea -->
+	<mx:VBox top="11" bottom="11" left="11" right="11"
+		styleName="contentBackground" horizontalScrollPolicy="off" verticalScrollPolicy="off" >
+	</mx:VBox>
+	
+	<!-- ContentArea -->
+	<mx:Canvas top="52" bottom="34" left="15" right="15"
+		styleName="contentArea" horizontalScrollPolicy="off" verticalScrollPolicy="auto" >
+		<chrome:BorderHighlight top="0" bottom="0" left="0" right="0" />
+		<mx:Image source="assets/app/restfulx-logo.png" x="10"/>
+		<mx:ViewStack id="mainViewStack" width="100%" height="100%" x="10" y="70">
+			<main:Home id="home"/>
+		</mx:ViewStack>
+		
+	</mx:Canvas>
+	
+	<!-- Application ControlBar -->
+	<chrome:AppControlBar_dark id="appControlBar"
+		height="40" top="11" left="11" right="11"
+		mouseEnabled="true" useHandCursor="true" mouseDown="nativeWindow.startMove()"
+		doubleClickEnabled="true" doubleClick="stage.nativeWindow.minimize()" />
+	
+	<!-- Application StatusBar -->
+	<!--<chrome:StatusBar_dark bottom="11" left="11" right="11" />-->
+	
+</mx:WindowedApplication>

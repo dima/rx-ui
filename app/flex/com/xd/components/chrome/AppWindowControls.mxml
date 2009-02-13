@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" height="100%" width="16"
+	horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	mouseOver="myRollOver();" mouseOut="myRollOut();"
+	initialize="detectOS();" >
+	
+	<mx:Script>
+		<![CDATA[
+			import flash.events.Event;
+			
+			private function detectOS():void {
+				if(Capabilities.os.search("Mac") >= 0){
+					trace("Mac Controls");
+					macControls.visible = true;
+					winControls.width = 1;
+				} else {
+					trace("PC Controls");
+					winControls.visible = true;
+					macControls.width = 1;
+				}
+			}
+			
+			private function myRollOver():void {
+				macCloseButton.setStyle("styleName", "macCloseOverButton");
+				//macMiniButton.setStyle("styleName", "macMinimizeOverButton");
+				//macMaxButton.setStyle("styleName", "macMaximizeOverButton");
+			}
+			
+			
+			private function myRollOut():void {
+				macCloseButton.setStyle("styleName", "macCloseButton");
+				//macMiniButton.setStyle("styleName", "macMinimizeButton");
+				//macMaxButton.setStyle("styleName", "macMaximizeButton");
+			} 
+
+		]]>
+	</mx:Script>
+	
+	<mx:HBox id="macControls" top="5" left="2" width="60" horizontalGap="5" verticalAlign="top" horizontalAlign="left" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false" >
+		<mx:Button id="macCloseButton" height="16" width="16" styleName="macCloseButton" click="NativeApplication.nativeApplication.exit()" tabEnabled="false" toolTip="Close" buttonMode="true" mouseEnabled="true" useHandCursor="false"/>
+		<!--<mx:Button id="macMiniButton" height="16" width="16" styleName="macMinimizeButton" click="stage.nativeWindow.minimize()" toolTip="Minimize" buttonMode="true" mouseEnabled="true" useHandCursor="false"/>-->
+		<!--<mx:Button id="macMaxButton" height="16" width="16" styleName="macMaximizeButton" click="stage.nativeWindow.maximize()" tabEnabled="false" toolTip="Maximize" buttonMode="true" mouseEnabled="true" useHandCursor="false"/> -->
+	</mx:HBox>
+	
+	<mx:HBox id="winControls" top="8" right="0" width="60" height="100%" horizontalGap="2" verticalAlign="top" horizontalAlign="right" horizontalScrollPolicy="off" verticalScrollPolicy="off" visible="false" >
+		<!--<mx:Button height="16" width="16" styleName="winMinimizeButton" click="stage.nativeWindow.minimize()" toolTip="Minimize" buttonMode="true" mouseEnabled="true" useHandCursor="false"/>-->
+		<!--<mx:Button height="16" width="16" styleName="winMaximizeButton" tabEnabled="false" toolTip="Maximize" buttonMode="true" mouseEnabled="true" useHandCursor="false"/> -->
+		<mx:Button height="16" width="16" styleName="winCloseButton" click="NativeApplication.nativeApplication.exit()" tabEnabled="false" toolTip="Close" buttonMode="true" mouseEnabled="true" useHandCursor="false"/>
+	</mx:HBox>
+
+</mx:Canvas>

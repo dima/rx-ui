@@ -1,0 +1,488 @@
+/* CSS file */
+/*
+//------------------------------
+//  Fonts
+//------------------------------
+*/
+
+@font-face {
+    src: url("fonts/MyriadPro-Regular.otf") ;
+    fontFamily: "MyriadAIR";
+    advanced-anti-aliasing: true;
+}
+
+@font-face {
+    src: url("fonts/MyriadPro-Bold.otf") ;
+    fontFamily: "MyriadAIR";
+    fontWeight: bold;
+    advanced-anti-aliasing: true;
+}
+
+/*
+//------------------------------
+//  Application
+//------------------------------
+*/
+
+Window, WindowedApplication {
+	fontFamily: "MyriadAIR";
+	font-size: 12;
+	font-anti-alias-type: advanced;
+	backgroundColor: #000000;
+	backgroundGradientAlphas: 0, 0;
+	backgroundAlpha: 1;
+	borderStyle: solid;
+	borderThickness: 0;
+	borderColor: #000000;
+	dropShadowEnabled: false;
+	dropShadowColor: #000000;
+	shadowDistance: 1;
+    modalTransparency: 0.65;
+    modalTransparencyBlur: 3;
+    modalTransparencyColor: #000000;
+    modalTransparencyDuration: 100;
+    paddingBottom: 10;
+    paddingTop: 10;
+    paddingLeft: 10;
+    paddingRight: 10;
+    horizontalAlign: left;
+    themeColor: #0099FF;
+    verticalAlign: middle;
+    horizontalAlign: center;
+    horizontalGap: 0;
+    verticalGap: 0;
+}
+
+
+/*
+//------- Windows Windowing Buttons ---------
+*/
+
+.winMinimizeButton {
+	icon: Embed(source="skins/light/icon_minimize_up.png");
+	upIcon: Embed(source="skins/light/icon_minimize_up.png");
+	overIcon: Embed(source="skins/light/icon_minimize_over.png");
+	downIcon: Embed(source="skins/light/icon_minimize_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");	
+}
+
+.winMaximizeButton {
+	icon: Embed(source="skins/light/icon_expand_up.png");
+	upIcon: Embed(source="skins/light/icon_expand_up.png");
+	overIcon: Embed(source="skins/light/icon_expand_over.png");
+	downIcon: Embed(source="skins/light/icon_expand_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");	
+}
+
+.winCloseButton {
+	icon: Embed(source="skins/light/icon_close_up.png");
+	upIcon: Embed(source="skins/light/icon_close_up.png");
+	overIcon: Embed(source="skins/light/icon_close_over.png");
+	downIcon: Embed(source="skins/light/icon_close_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");
+}
+
+/*
+//------- Mac Windowing Buttons ---------
+*/
+.macMinimizeButton {
+	icon: Embed(source="skins/light/icon_mac_minimize_up.png");
+	upIcon: Embed(source="skins/light/icon_mac_minimize_up.png");
+	overIcon: Embed(source="skins/light/icon_mac_minimize_over.png");
+	downIcon: Embed(source="skins/light/icon_mac_minimize_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");	
+}
+
+.macMaximizeButton {
+	icon: Embed(source="skins/light/icon_mac_expand_up.png");
+	upIcon: Embed(source="skins/light/icon_mac_expand_up.png");
+	overIcon: Embed(source="skins/light/icon_mac_expand_over.png");
+	downIcon: Embed(source="skins/light/icon_mac_expand_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");	
+}
+
+.macCloseButton {
+	icon: Embed(source="skins/light/icon_mac_close_up.png");
+	upIcon: Embed(source="skins/light/icon_mac_close_up.png");
+	overIcon: Embed(source="skins/light/icon_mac_close_over.png");
+	downIcon: Embed(source="skins/light/icon_mac_close_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");
+}
+
+/*
+//------
+*/
+
+.macMinimizeOverButton {
+	icon: Embed(source="skins/light/icon_mac_minimize_over.png");
+	upIcon: Embed(source="skins/light/icon_mac_minimize_over.png");
+	overIcon: Embed(source="skins/light/icon_mac_minimize_over.png");
+	downIcon: Embed(source="skins/light/icon_mac_minimize_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");	
+}
+
+.macMaximizeOverButton {
+	icon: Embed(source="skins/light/icon_mac_expand_over.png");
+	upIcon: Embed(source="skins/light/icon_mac_expand_over.png");
+	overIcon: Embed(source="skins/light/icon_mac_expand_over.png");
+	downIcon: Embed(source="skins/light/icon_mac_expand_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");	
+}
+
+.macCloseOverButton {
+	icon: Embed(source="skins/light/icon_mac_close_over.png");
+	upIcon: Embed(source="skins/light/icon_mac_close_over.png");
+	overIcon: Embed(source="skins/light/icon_mac_close_over.png");
+	downIcon: Embed(source="skins/light/icon_mac_close_down.png");
+	disabledSkin: Embed(source="skins/light/clear.png");
+    downSkin: Embed(source="skins/light/clear.png");
+    overSkin: Embed(source="skins/light/clear.png");
+    upSkin: Embed(source="skins/light/clear.png");
+}
+
+/*
+//------------------------------
+//  Buttons
+//------------------------------
+*/
+
+Button {
+	fontSize: 11;
+	fontWeight: bold;
+	color: #444444;
+	textRollOverColor: #222222;
+	textSelectedColor: #000000;
+	textAlign: "center";
+	paddingLeft: 8;
+	paddingTop: 5;
+	horizontalGap: 0;
+    disabledSkin: Embed(source="skins/light/Button_disabledSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+    downSkin: Embed(source="skins/light/Button_downSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+    overSkin: Embed(source="skins/light/Button_overSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+    upSkin: Embed(source="skins/light/Button_upSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+    selectedDisabledSkin: Embed(source="skins/light/Button_disabledSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+    selectedDownSkin: Embed(source="skins/light/Button_downSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+    selectedOverSkin: Embed(source="skins/light/Button_overSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+    selectedUpSkin: Embed(source="skins/light/Button_upSkin.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="59", scaleGridBottom="17");
+}
+
+.synchroNow {
+	paddingTop: 5;
+	fontWeight: bold;
+	color: #666666;
+	textRollOverColor: #333333;
+	textSelectedColor: #222222;
+	upIcon: Embed(source="skins/light/icon_synchronize_up.png");
+	overIcon: Embed(source="skins/light/icon_synchronize_over.png");
+	downIcon: Embed(source="skins/light/icon_synchronize_over.png");
+}
+
+/*
+//------------------------------
+//  Custom Chrome
+//------------------------------
+*/
+
+CustomChrome {
+	backgroundAlpha: .95;
+    borderStyle: solid;
+	borderThickness: 0;
+	dropShadowEnabled: false;
+	paddingTop: 0;
+	paddingLeft: 0;
+	paddingRight: 0;
+	paddingBottom: 0;
+	verticalAlign: top;
+    horizontalAlign: left;
+    horizontalGap: 0;
+    verticalGap: 0;
+}
+
+CustomChrome, CustomDropShadow {
+	backgroundSize: "100%";
+	backgroundImage: Embed(source="chrome/light/BackgroundChrome.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="965", scaleGridBottom="685");
+}
+
+.customChromeBorder {
+	backgroundSize: "100%";
+	backgroundImage: Embed(source="chrome/light/BackgroundBorderChrome.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="965", scaleGridBottom="685");
+}
+
+
+
+/*
+//------------------------------
+//  CheckBox
+//------------------------------
+*/
+CheckBox {
+	fontSize: 11;
+	fontWeight: bold;
+	color: #666666;
+    textRollOverColor: #444444;
+    textSelectedColor: #333333;
+    disabledIcon: Embed(source="skins/light/CheckBox_disabledIcon.png");
+    downIcon: Embed(source="skins/light/CheckBox_downIcon.png");
+    overIcon: Embed(source="skins/light/CheckBox_overIcon.png");
+    selectedDisabledIcon: Embed(source="skins/light/CheckBox_selectedDisabledIcon.png");
+    selectedDownIcon: Embed(source="skins/light/CheckBox_selectedDownIcon.png");
+    selectedOverIcon: Embed(source="skins/light/CheckBox_selectedOverIcon.png");
+    selectedUpIcon: Embed(source="skins/light/CheckBox_selectedUpIcon.png");
+    upIcon: Embed(source="skins/light/CheckBox_upIcon.png");
+}
+
+
+/*
+//------------------------------
+//  ComboBox
+//------------------------------
+*/
+
+ComboBox {
+	paddingLeft: 5;
+	paddingTop: 0;
+	fontSize: 11;
+	fontWeight: bold;
+	color: #666666;
+	disabledSkin: Embed(source="skins/light/ComboBoxArrow_disabledSkin.png",
+		scaleGridLeft="4", scaleGridTop="4", scaleGridRight="64", scaleGridBottom="18"); 
+	downSkin: Embed(source="skins/light/ComboBoxArrow_downSkin.png",
+		scaleGridLeft="4", scaleGridTop="4", scaleGridRight="64", scaleGridBottom="18"); 
+	editableDisabledSkin: Embed(source="skins/light/ComboBoxArrow_editableDisabledSkin.png",
+		scaleGridLeft="4", scaleGridTop="0", scaleGridRight="17", scaleGridBottom="18");
+	editableDownSkin: Embed(source="skins/light/ComboBoxArrow_editableDownSkin.png",
+		scaleGridLeft="4", scaleGridTop="0", scaleGridRight="17", scaleGridBottom="18");
+	editableOverSkin: Embed(source="skins/light/ComboBoxArrow_editableOverSkin.png",
+		scaleGridLeft="4", scaleGridTop="0", scaleGridRight="17", scaleGridBottom="18");
+	editableUpSkin: Embed(source="skins/light/ComboBoxArrow_editableUpSkin.png",
+		scaleGridLeft="4", scaleGridTop="0", scaleGridRight="17", scaleGridBottom="18");
+	overSkin: Embed(source="skins/light/ComboBoxArrow_overSkin.png",
+		scaleGridLeft="4", scaleGridTop="4", scaleGridRight="64", scaleGridBottom="18"); 
+	upSkin: Embed(source="skins/light/ComboBoxArrow_upSkin.png",
+		scaleGridLeft="4", scaleGridTop="4", scaleGridRight="64", scaleGridBottom="18"); 
+}
+
+
+/*
+//------------------------------
+//  Container Styles
+//------------------------------
+*/
+
+.contentArea {
+	backgroundAlpha: 0.90;
+	backgroundColor: #EEEEEE;
+    borderStyle: solid;
+	borderThickness: 1;
+	borderColor: #D7D7D7;
+	borderSides: "left top right bottom";
+	cornerRadius: 0;
+	dropShadowEnabled: false;
+	paddingTop: 10;
+	paddingLeft: 10;
+	paddingRight: 10;
+	paddingBottom: 10;
+	verticalAlign: top;
+    horizontalAlign: left;
+    horizontalGap: 5;
+    verticalGap: 0;
+}
+
+BorderHighlight {
+    borderStyle: solid;
+	borderThickness: 1;
+	borderColor: #FFFFFF;
+	cornerRadius: 0;
+}
+
+SynchSettingsLight {
+	backgroundAlpha: 0.95;
+	backgroundColor: #F7F7F7;
+    borderStyle: solid;
+	borderThickness: 1;
+	borderColor: #FFFFFF;
+	paddingTop: 0;
+	paddingLeft: 0;
+	paddingRight: 0;
+	paddingBottom: 0;
+	verticalAlign: top;
+    horizontalAlign: left;
+    horizontalGap: 0;
+    verticalGap: 0;
+}
+
+/*
+//------------------------------
+//  ControlBar
+//------------------------------
+*/
+
+.appControlBar {
+	paddingTop: 1; 
+	paddingBottom: 1;
+	paddingLeft: 1;
+	paddingRight: 1;
+	verticalGap: 0;
+	horizontalGap: 5;
+	verticalAlign: middle;
+	horizontalAlign: left;
+}
+
+/*
+//------------------------------
+//  RadioButton
+//------------------------------
+*/
+
+RadioButton {
+    color: #CCCCCC;
+    textRollOverColor: #F7F7F7;
+    textSelectedColor: #FFFFFF;
+    disabledIcon: Embed(source="skins/light/RadioButton_disabledIcon.png");
+    downIcon: Embed(source="skins/light/RadioButton_downIcon.png");
+    overIcon: Embed(source="skins/light/RadioButton_overIcon.png");
+    selectedDisabledIcon: Embed(source="skins/light/RadioButtonSelected_disabledIcon.png");
+    selectedDownIcon: Embed(source="skins/light/RadioButtonSelected_downIcon.png");
+    selectedOverIcon: Embed(source="skins/light/RadioButtonSelected_overIcon.png");
+    selectedUpIcon: Embed(source="skins/light/RadioButtonSelected_upIcon.png");
+    upIcon: Embed(source="skins/light/RadioButton_upIcon.png");
+}
+
+/*
+//------------------------------
+//  ScrollBar
+//------------------------------
+*/
+
+ScrollBar {
+	up-arrow-skin: ClassReference("mx.skins.ProgrammaticSkin");
+    down-arrow-skin: ClassReference("mx.skins.ProgrammaticSkin");
+    thumbIcon: Embed(source="skins/light/ScrollBar_thumbIcon.png");
+	thumbDownSkin: Embed(source="skins/light/ScrollThumb_downSkin.png",
+		scaleGridLeft="2", scaleGridTop="4", scaleGridRight="9", scaleGridBottom="40");
+	thumbOverSkin: Embed(source="skins/light/ScrollThumb_overSkin.png",
+		scaleGridLeft="2", scaleGridTop="4", scaleGridRight="9", scaleGridBottom="40");
+	thumbUpSkin: Embed(source="skins/light/ScrollThumb_upSkin.png",
+		scaleGridLeft="2", scaleGridTop="4", scaleGridRight="9", scaleGridBottom="40");
+	trackSkin: Embed(source="skins/light/ScrollTrack_Skin.png",
+		scaleGridLeft="4", scaleGridTop="4", scaleGridRight="8", scaleGridBottom="98");
+}
+
+.myScrollBar {
+	width: 12;
+	up-arrow-skin: ClassReference("mx.skins.ProgrammaticSkin");
+    down-arrow-skin: ClassReference("mx.skins.ProgrammaticSkin");
+    thumbIcon: Embed(source="skins/light/ScrollBar_thumbIcon.png");
+	thumbDownSkin: Embed(source="skins/light/ScrollThumb_downSkin.png",
+		scaleGridLeft="2", scaleGridTop="2", scaleGridRight="10", scaleGridBottom="43");
+	thumbOverSkin: Embed(source="skins/light/ScrollThumb_overSkin.png",
+		scaleGridLeft="2", scaleGridTop="2", scaleGridRight="10", scaleGridBottom="43");
+	thumbUpSkin: Embed(source="skins/light/ScrollThumb_overSkin.png",
+		scaleGridLeft="2", scaleGridTop="2", scaleGridRight="10", scaleGridBottom="43");
+	trackSkin: Embed(source="skins/light/ScrollTrack_Skin.png",
+		scaleGridLeft="2", scaleGridTop="2", scaleGridRight="10", scaleGridBottom="100");
+}
+
+/*
+//------------------------------
+//  Search Input
+//------------------------------
+*/
+
+SearchInputLight {
+	backgroundSize: "100%";
+	verticalAlign: middle;
+	horizontalAlign: left;
+	horizontalGap: 5;
+	backgroundImage: Embed(source="skins/light/textinput_background.png",
+        scaleGridLeft="5", scaleGridTop="5", scaleGridRight="170", scaleGridBottom="19");
+}
+
+.searchInputText {
+	backgroundAlpha: 0;
+	focusAlpha: 0;
+	color: #444444;
+	fontSize: 10;
+	borderStyle: solid;
+	borderThickness: 0;
+	paddingTop: 0;
+}
+
+
+/*
+//------------------------------
+//  Text Styles
+//------------------------------
+*/
+
+.header1 {
+	fontSize: 14;
+	fontWeight: bold;
+	color: #1A6ABB;
+	paddingTop: 0;
+}
+
+.header2 {
+	fontSize: 14;
+	fontWeight: bold;
+	color: #FF0095;
+	paddingTop: 0;
+}
+
+.header3 {
+	fontSize: 14;
+	fontWeight: bold;
+	color: #444444;
+	paddingTop: 0;
+}
+
+.header4 {
+	fontSize: 14;
+	fontWeight: bold;
+	color: #FFCC00;
+	paddingTop: 0;
+}
+
+.sync {
+	fontSize: 10;
+	fontWeight: bold;
+	color: #777777;
+}
+
+
+
+

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%" creationComplete="init()"
+	xmlns:merapi="merapi.*" xmlns:code="http://code.google.com/p/flexlib/">
+	<merapi:BridgeInstance id="bridge" result="handleResult(event)"/>
+  <mx:Script>
+    <![CDATA[
+    	import merapi.messages.Message;
+    	import merapi.messages.IMessage;
+    	import mx.rpc.events.ResultEvent;
+    	import mx.events.ResizeEvent;
+      
+      private function init():void {
+				// nothing here yet
+      }
+      
+      // merapi
+    	private function runScript():void {
+    		RxUi.gen.output = "";
+    		RxUi.gen.rubyOutput = "";
+    		
+    		// creation of ruby script
+    		createRubyScript();
+    		writeRubyFile();
+    		
+    		// creation of batch file
+    		createShellScript();
+    		writeBatchFile();
+    		executeBatchFile();
+			}
+			
+			private function createRubyScript():void {
+				var railsProject:String = fileList.selectedPath + "/" + projectName.text
+				
+				RxUi.gen.rubyOutput = "class RxUi" + "\n"
+				+ "  RxROOT = " + "\'" + railsProject + "\'" + "\n\n"
+				
+				+ "  def self.destination_path(relative_destination)" + "\n"
+      	+ "    File.join(RxROOT, relative_destination)" + "\n"
+    		+ "  end" + "\n\n"
+    		
+    		+ "  def self.gsub_file(relative_destination, regexp, *args, &block)" + "\n"
+    		+ "    path = destination_path(relative_destination)" + "\n"
+    		+ "    content = File.read(path).gsub(regexp, *args, &block)" + "\n"
+    		+ "    File.open(path, 'wb') { |file| file.write(content) }" + "\n"
+				+ "  end" + "\n\n"
+				
+				+ "end" + "\n\n"
+				
+				+ "puts 'Now inserting config.gem \"restfulx\" in environment.rb'" + "\n"
+				+ "RxUi.gsub_file 'config/environment.rb', /(config.gem \"aws-s3\".*)/, \"\\\\1\\n  config.gem \'restfulx\'\""
+				;
+				
+			}
+			
+			private function writeRubyFile():void {
+				var f:File = File.userDirectory;
+				f = f.resolvePath("rx_batch_files/" + projectName.text + ".rb");
+				
+        var stream:FileStream = new FileStream();
+        stream.open(f, FileMode.WRITE);
+        stream.writeUTFBytes(RxUi.gen.rubyOutput);
+        stream.close();
+			}
+			
+			private function createShellScript():void {
+				var railsProject:String = fileList.selectedPath + "/" + projectName.text
+
+				RxUi.gen.output += "rails -d mysql ";
+				RxUi.gen.output += fileList.selectedPath + "/";
+				RxUi.gen.output += projectName.text + "\n";
+				RxUi.gen.output += "cd " + railsProject + "\n";
+				RxUi.gen.output += "rm public/index.html\n";
+				RxUi.gen.output += "cd ~/rx_batch_files\n";
+				RxUi.gen.output += "ruby " + projectName.text + ".rb\n";
+			}
+			
+			private function writeBatchFile():void {
+				var f:File = File.userDirectory;
+				f = f.resolvePath("rx_batch_files/" + projectName.text + ".sh");
+				
+        var stream:FileStream = new FileStream();
+        stream.open(f, FileMode.WRITE);
+        stream.writeUTFBytes(RxUi.gen.output);
+        stream.close();
+			}
+			
+			private function executeBatchFile():void {
+				var f:File = File.userDirectory;
+				f = f.resolvePath("rx_batch_files/" + projectName.text + ".sh");
+				
+				// create applescript file
+				var a:File = File.userDirectory;
+				a = a.resolvePath("rx_batch_files/" + projectName.text + ".appscript");
+				
+				var applescript:String = "tell application \"Terminal\"" + "\n"
+				+ "  launch" + "\n"
+				+ "  activate" + "\n"
+			  + "  if (count of windows) > 0 then" + "\n"
+				+ "    do script \"" + ". " + f.nativePath + "\"" + " in window 1" + "\n"
+				+ "  else" + "\n"
+			 	+ "    do script \"" + ". " + f.nativePath + "\"" + "\n"
+				+ "  end if" + "\n"
+				+ "end tell";
+				
+        var stream:FileStream = new FileStream();
+        stream.open(a, FileMode.WRITE);
+        stream.writeUTFBytes(applescript);
+        stream.close();
+				
+				// merapi calls
+				bridge.systemExecute(["chmod", "777", f.nativePath]);
+				bridge.systemExecute(["osascript", a.nativePath]);
+			}
+		
+			private function handleResult(event:ResultEvent):void {
+				trace("Current state: " + this.currentState);
+				trace("Event result: " + event.result);
+			}
+			
+    ]]>
+  </mx:Script>
+  <mx:Text text="Welcome to the RestfulX Project Creator.  Choose a Rails Project Name and Directory to get started."
+  	fontSize="18" color="#00bff3" width="400"/>
+  <code:PromptingTextInput id="projectName" width="200"
+  	x="10" y="68" prompt="Project Name" fontSize="14"/>
+ 	<mx:FileSystemTree id="fileList" width="280" height="100" 
+ 		x="440" y="5" directory="{File.userDirectory}"/> 
+  <mx:Button label="Models"
+		fontSize="40" x="8" y="120" width="350" horizontalGap="40"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/document_add.png')"/>
+	<mx:Button label="Layouts"
+		fontSize="40" x="370" y="120" width="350" horizontalGap="25"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/application.png')"/>
+	<mx:Button label="Charts"
+		fontSize="40" x="8" y="270" width="350" horizontalGap="50"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/piechart.png')"/>
+	<mx:Button label="Create" click="runScript()"
+		fontSize="40" x="370" y="270" width="350" horizontalGap="50"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/notification_done.png')"/>
+  
+</mx:Canvas>
