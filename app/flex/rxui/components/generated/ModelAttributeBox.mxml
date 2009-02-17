@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" label="ModelAttribute"
+  xmlns:rx="org.restfulx.components.rx.*">
+  <mx:Script><![CDATA[
+    import org.restfulx.Rx;
+    import org.restfulx.utils.RxUtils;
+    import rxui.models.ModelAttribute;
+    import rxui.models.ModelObject;
+
+    [Bindable]
+    private var _modelAttribute:ModelAttribute = new ModelAttribute();
+
+    private function newModelAttribute():void {
+      _modelAttribute = new ModelAttribute();
+      modelAttributesList.selectedIndex = -1;
+    }
+
+    private function saveModelAttribute():void {
+      if (_modelAttribute.id) {
+        updateModelAttribute();
+      } else {
+        createModelAttribute();
+      }
+    }
+  
+    private function createModelAttribute():void {
+      var modelAttribute:ModelAttribute = new ModelAttribute();
+      modelAttribute.name = nameTextInput.text;
+      modelAttribute.attributeType = attributeTypeTextInput.text;
+      modelAttribute.attributeLength = int(attributeLengthTextInput.text);
+
+      modelAttribute.modelObject = ModelObject(modelObjectComboBox.selectedItem);
+      modelAttribute.create({onSuccess: onModelAttributeCreate});
+    }
+
+    private function updateModelAttribute():void {
+      _modelAttribute.name = nameTextInput.text;
+      _modelAttribute.attributeType = attributeTypeTextInput.text;
+      _modelAttribute.attributeLength = int(attributeLengthTextInput.text);
+
+      _modelAttribute.modelObject = ModelObject(modelObjectComboBox.selectedItem);
+      _modelAttribute.update({onSuccess: onModelAttributeUpdate});
+    }
+
+    private function destroyModelAttribute():void {
+      _modelAttribute.destroy({onSuccess: onModelAttributeDestroy});
+    }
+  
+    private function onModelAttributeSelect():void {
+      _modelAttribute = RxUtils.clone(modelAttributesList.selectedItem) as ModelAttribute;
+    }
+  
+    private function onModelAttributeCreate(modelAttribute:ModelAttribute):void {
+      _modelAttribute = new ModelAttribute;
+    }
+  
+    private function onModelAttributeUpdate(modelAttribute:ModelAttribute):void {
+      modelAttributesList.selectedItem = modelAttribute;
+      _modelAttribute = RxUtils.clone(modelAttribute) as ModelAttribute;
+    }
+  
+    private function onModelAttributeDestroy(modelAttribute:ModelAttribute):void {
+      onModelAttributeCreate(modelAttribute);
+    }
+
+    private function canDeleteModelAttribute(modelAttribute:ModelAttribute):Boolean {
+      return modelAttribute != null && !RxUtils.isEmpty(modelAttribute.id);
+    }
+  ]]></mx:Script>
+  <mx:Panel id="modelAttributesPanel"
+    title="ModelAttributes" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
+    <mx:List id="modelAttributesList"
+      width="100%" height="100%"
+      dataProvider="{Rx.models.index(ModelAttribute)}"
+      change="onModelAttributeSelect()"/>
+    <mx:ControlBar width="100%">
+      <mx:Button label="New ModelAttribute" width="100%" height="30"
+        click="newModelAttribute()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+  <mx:Panel title="Edit ModelAttribute" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
+    <mx:Form width="100%" height="100%">
+      <mx:FormItem label="Name" width="100%">
+        <mx:TextInput id="nameTextInput" width="100%" text="{_modelAttribute.name}"/>
+      </mx:FormItem>
+      <mx:FormItem label="AttributeType" width="100%">
+        <mx:TextInput id="attributeTypeTextInput" width="100%" text="{_modelAttribute.attributeType}"/>
+      </mx:FormItem>
+      <mx:FormItem label="AttributeLength" width="100%">
+        <mx:TextInput id="attributeLengthTextInput" width="100%" text="{_modelAttribute.attributeLength}"/>
+      </mx:FormItem>
+      <mx:FormItem label="ModelObject" width="100%">
+        <mx:ComboBox id="modelObjectComboBox" width="200"
+          labelField="{ModelObject.LABEL}"
+          dataProvider="{Rx.models.index(ModelObject)}" prompt="ModelObject ..."
+          selectedItem="{_modelAttribute.modelObject}" />
+      </mx:FormItem>
+    </mx:Form>
+    <mx:ControlBar width="100%">
+      <mx:Button label="Save ModelAttribute" width="50%" height="30"
+        click="saveModelAttribute()"/>
+      <mx:Button label="Delete ModelAttribute" width="50%" height="30"
+        enabled="{canDeleteModelAttribute(_modelAttribute)}"
+        click="destroyModelAttribute()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+</mx:HBox>

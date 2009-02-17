@@ -1,3 +1,20 @@
 project:
- - name: string
+ - name:  string
  - notes: text
+ - path:  string
+ - has_many: [model_objects]
+ 
+model_object:
+ - has_many: [model_attributes, layouts]
+ - belongs_to: [project]
+ - name: string
+ 
+model_attribute:
+ - name: string
+ - attribute_type: string
+ - attribute_length: integer
+ - belongs_to: [model_object]
+ 
+layout:
+ - name: string
+ - belongs_to: [model_object]

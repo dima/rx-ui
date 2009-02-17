@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" label="Layout"
+  xmlns:rx="org.restfulx.components.rx.*">
+  <mx:Script><![CDATA[
+    import org.restfulx.Rx;
+    import org.restfulx.utils.RxUtils;
+    import rxui.models.Layout;
+    import rxui.models.ModelObject;
+
+    [Bindable]
+    private var _layout:Layout = new Layout();
+
+    private function newLayout():void {
+      _layout = new Layout();
+      layoutsList.selectedIndex = -1;
+    }
+
+    private function saveLayout():void {
+      if (_layout.id) {
+        updateLayout();
+      } else {
+        createLayout();
+      }
+    }
+  
+    private function createLayout():void {
+      var layout:Layout = new Layout();
+      layout.name = nameTextInput.text;
+
+      layout.modelObject = ModelObject(modelObjectComboBox.selectedItem);
+      layout.create({onSuccess: onLayoutCreate});
+    }
+
+    private function updateLayout():void {
+      _layout.name = nameTextInput.text;
+
+      _layout.modelObject = ModelObject(modelObjectComboBox.selectedItem);
+      _layout.update({onSuccess: onLayoutUpdate});
+    }
+
+    private function destroyLayout():void {
+      _layout.destroy({onSuccess: onLayoutDestroy});
+    }
+  
+    private function onLayoutSelect():void {
+      _layout = RxUtils.clone(layoutsList.selectedItem) as Layout;
+    }
+  
+    private function onLayoutCreate(layout:Layout):void {
+      _layout = new Layout;
+    }
+  
+    private function onLayoutUpdate(layout:Layout):void {
+      layoutsList.selectedItem = layout;
+      _layout = RxUtils.clone(layout) as Layout;
+    }
+  
+    private function onLayoutDestroy(layout:Layout):void {
+      onLayoutCreate(layout);
+    }
+
+    private function canDeleteLayout(layout:Layout):Boolean {
+      return layout != null && !RxUtils.isEmpty(layout.id);
+    }
+  ]]></mx:Script>
+  <mx:Panel id="layoutsPanel"
+    title="Layouts" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
+    <mx:List id="layoutsList"
+      width="100%" height="100%"
+      dataProvider="{Rx.models.index(Layout)}"
+      change="onLayoutSelect()"/>
+    <mx:ControlBar width="100%">
+      <mx:Button label="New Layout" width="100%" height="30"
+        click="newLayout()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+  <mx:Panel title="Edit Layout" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
+    <mx:Form width="100%" height="100%">
+      <mx:FormItem label="Name" width="100%">
+        <mx:TextInput id="nameTextInput" width="100%" text="{_layout.name}"/>
+      </mx:FormItem>
+      <mx:FormItem label="ModelObject" width="100%">
+        <mx:ComboBox id="modelObjectComboBox" width="200"
+          labelField="{ModelObject.LABEL}"
+          dataProvider="{Rx.models.index(ModelObject)}" prompt="ModelObject ..."
+          selectedItem="{_layout.modelObject}" />
+      </mx:FormItem>
+    </mx:Form>
+    <mx:ControlBar width="100%">
+      <mx:Button label="Save Layout" width="50%" height="30"
+        click="saveLayout()"/>
+      <mx:Button label="Delete Layout" width="50%" height="30"
+        enabled="{canDeleteLayout(_layout)}"
+        click="destroyLayout()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+</mx:HBox>

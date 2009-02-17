@@ -1,4 +1,5 @@
 package rxui.models {
+  import org.restfulx.collections.ModelsCollection;
   import org.restfulx.models.RxModel;
   
   [Resource(name="projects")]
@@ -10,6 +11,11 @@ package rxui.models {
 
     public var notes:String = "";
 
+    public var path:String = "";
+
+    [HasMany]
+    public var modelObjects:ModelsCollection;
+    
     public function Project() {
       super(LABEL);
     }

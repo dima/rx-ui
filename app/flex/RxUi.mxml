@@ -8,13 +8,16 @@
 	preloader="assets.loader.CustomPreloader"
 	xmlns:chrome="com.xd.components.chrome.*" 
 	xmlns:sync="com.xd.components.sync.*"
-	xmlns:main="rxui.components.main.*"
+	xmlns:app="rxui.components.*"
 	xmlns:merapi="merapi.*">
 	<merapi:BridgeInstance id="bridge"/>
 	<mx:Style source="assets/xd_dark.css" />
 	
 	<mx:Script>
 		<![CDATA[
+			import rxui.models.ModelAttribute;
+			import rxui.models.ModelObject;
+			import mx.core.Application;
 			import org.restfulx.Rx;
 			import rxui.controllers.GenerationController;
 			import org.restfulx.services.air.AIRServiceProvider;
@@ -28,11 +31,11 @@
 			import flash.filesystem.*;
 			import flash.net.URLRequest;
 			
-			// shortcut functions
+			// Shortcut functions
       public static function get gen():GenerationController {
         return GenerationController.instance;
       }
-			
+      
 			// ######################################
 			// Embed SystemTray Icons
 			// ######################################
@@ -60,7 +63,9 @@
         	
     	public function init(event:Event):void {
     		Rx.enableLogging();
-    		ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "rxui");
+    		ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "rx_projects/rxui");
+    		Rx.models.index(ModelObject);
+    		Rx.models.index(ModelAttribute);
     		
     		// Fake out message to merapi
     		var message:Message = new Message();
@@ -159,6 +164,9 @@
 		]]>
 	</mx:Script>
 	
+	<mx:Fade id="hideEffect" duration="300" alphaFrom="1" alphaTo="0"/>
+  <mx:Fade id="showEffect" duration="300" alphaFrom="0" alphaTo="1"/>
+	
 	<!-- Application Custom Chrome -->
 	<chrome:CustomChrome top="0" bottom="0" left="0" right="0" />
 	
@@ -171,9 +179,11 @@
 	<mx:Canvas top="52" bottom="34" left="15" right="15"
 		styleName="contentArea" horizontalScrollPolicy="off" verticalScrollPolicy="auto" >
 		<chrome:BorderHighlight top="0" bottom="0" left="0" right="0" />
-		<mx:Image source="assets/app/restfulx-logo.png" x="10"/>
+		<mx:Image source="assets/app/restfulx-logo.png" x="10" toolTip="Click me to return home!"
+			click="{mainViewStack.selectedChild = home}"/>
 		<mx:ViewStack id="mainViewStack" width="100%" height="100%" x="10" y="70">
-			<main:Home id="home"/>
+			<app:Home id="home" hideEffect="{hideEffect}" showEffect="{showEffect}"/>
+			<app:Models id="models" hideEffect="{hideEffect}" showEffect="{showEffect}"/>
 		</mx:ViewStack>
 		
 	</mx:Canvas>

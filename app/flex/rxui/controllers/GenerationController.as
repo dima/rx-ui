@@ -1,4 +1,6 @@
 package rxui.controllers {
+	import flash.filesystem.File;
+	
 	import org.restfulx.Rx;
 	import org.restfulx.events.CacheUpdateEvent;
   
@@ -9,6 +11,9 @@ package rxui.controllers {
   	
 		public var output:String = "";
 		public var rubyOutput:String = "";
+		public var modelYamlOutput:String = "";
+		public var outputDirectory:String = File.userDirectory.nativePath + '/rx_projects';
+		public var projectName:String = "amanda"; //TODO: change back to rename_me
     
     public function GenerationController(enforcer:SingletonEnforcer) {
       Rx.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);

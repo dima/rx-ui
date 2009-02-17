@@ -10,7 +10,7 @@ package rxui.controllers {
   public class ApplicationController extends RxApplicationController {
     private static var controller:ApplicationController;
     
-    public static var models:Array = [Project]; /* Models */
+    public static var models:Array = [Layout, ModelAttribute, ModelObject, Project]; /* Models */
     
     public static var commands:Array = []; /* Commands */
     

@@ -51,10 +51,10 @@ Window, WindowedApplication {
 	dropShadowEnabled: false;
 	dropShadowColor: #000000;
 	shadowDistance: 1;
-	modalTransparency: 0.95;
+	modalTransparency: 0.6;
 	modalTransparencyBlur: 3;
-	modalTransparencyColor: #000000;
-	modalTransparencyDuration: 100;
+	modalTransparencyColor: #333333;
+	modalTransparencyDuration: 400;
 	paddingBottom: 10;
 	paddingTop: 10;
 	paddingLeft: 10;
@@ -579,9 +579,9 @@ TabBar
 }
 
 .dgHeader {
-	fontSize: 10;
+	fontSize: 13;
 	fontWeight: bold;
-	color: #555555;
+	color: #FFFFFF;
 }
 
 .sync {

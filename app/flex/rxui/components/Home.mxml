@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%" creationComplete="init()"
+	xmlns:merapi="merapi.*" xmlns:code="http://code.google.com/p/flexlib/">
+	<merapi:BridgeInstance id="bridge" result="handleResult(event)"/>
+  <mx:Script>
+    <![CDATA[
+    	import rxui.models.ModelAttribute;
+    	import org.restfulx.Rx;
+    	import rxui.models.ModelObject;
+    	import mx.core.Application;
+    	import merapi.messages.Message;
+    	import merapi.messages.IMessage;
+    	import mx.rpc.events.ResultEvent;
+    	import mx.events.ResizeEvent;
+    	
+    	////
+      //import for modals
+      import mx.managers.PopUpManager;
+      import mx.containers.TitleWindow;
+      import mx.core.UIComponent;
+      import rxui.components.windows.FolderSelection;
+      
+      ////
+      //modal windows
+      public function showFolderSelection():void {
+        var folderSelectionWindow:FolderSelection = FolderSelection(PopUpManager.createPopUp(UIComponent(this.parentApplication), FolderSelection , true));
+        PopUpManager.centerPopUp(folderSelectionWindow);
+    	}
+    	
+    	////
+    	//variables
+      
+      ////
+      //init
+      private function init():void {
+				// nothing here yet
+      }
+      
+      private function setProject():void {
+      	RxUi.gen.projectName = projectName.text;
+      	
+      	if (RxUi.gen.projectName.length > 0)
+      		createB.enabled = true;
+      	else
+      		createB.enabled = false;
+      		
+      }
+      
+      ////
+      //merapi
+    	private function runScript():void {
+    		// creation of ruby scripts
+    		createRubyScript();
+    		writeRubyFile();
+    		writeModelYamlFile();
+    		
+    		// creation of batch files
+    		createShellScript();
+    		writeBatchFile();
+    		executeBatchFile();
+			}
+			
+			private function createRubyScript():void {
+				var railsProject:String = RxUi.gen.outputDirectory + "/" + RxUi.gen.projectName;
+				
+				RxUi.gen.rubyOutput = "class RxUi" + "\n"
+				+ "  RxROOT = " + "\'" + railsProject + "\'" + "\n\n"
+				
+				+ "  def self.destination_path(relative_destination)" + "\n"
+      	+ "    File.join(RxROOT, relative_destination)" + "\n"
+    		+ "  end" + "\n\n"
+    		
+    		+ "  def self.gsub_file(relative_destination, regexp, *args, &block)" + "\n"
+    		+ "    path = destination_path(relative_destination)" + "\n"
+    		+ "    content = File.read(path).gsub(regexp, *args, &block)" + "\n"
+    		+ "    File.open(path, 'wb') { |file| file.write(content) }" + "\n"
+				+ "  end" + "\n\n"
+				
+				+ "end" + "\n\n"
+				
+				+ "puts 'Now inserting config.gem \"restfulx\" in environment.rb'" + "\n"
+				+ "RxUi.gsub_file 'config/environment.rb', /(config.gem \"aws-s3\".*)/, \"\\\\1\\n  config.gem \'restfulx\'\""
+				;
+				
+			}
+			
+			private function writeRubyFile():void {
+				var f:File = File.userDirectory;
+				f = f.resolvePath("rx_projects/" + RxUi.gen.projectName + "_scripts/" + RxUi.gen.projectName + ".rb");
+				
+        var stream:FileStream = new FileStream();
+        stream.open(f, FileMode.WRITE);
+        stream.writeUTFBytes(RxUi.gen.rubyOutput);
+        stream.close();
+			}
+			
+			private function writeModelYamlFile():void {
+				RxUi.gen.modelYamlOutput = "";
+				var railsProject:String = RxUi.gen.outputDirectory + "/" + RxUi.gen.projectName;
+				var f:File = File.userDirectory;
+				f = f.resolvePath("../.." + railsProject + "/db/model" + ".yml");
+				
+				for each (var modelObject:ModelObject in Rx.models.index(ModelObject)) {
+					RxUi.gen.modelYamlOutput += modelObject.name + ":" + "\n";
+					
+					for each (var modelAttribute:ModelAttribute in modelObject.modelAttributes) {
+						RxUi.gen.modelYamlOutput += " - " + modelAttribute.name + ": string" + "\n";
+					}
+					
+					RxUi.gen.modelYamlOutput += "\n";
+				}
+				
+        var stream:FileStream = new FileStream();
+        stream.open(f, FileMode.WRITE);
+        stream.writeUTFBytes(RxUi.gen.modelYamlOutput);
+        stream.close();
+			}
+			
+			private function createShellScript():void {
+				var railsProject:String = RxUi.gen.outputDirectory + "/" + RxUi.gen.projectName;
+				
+				RxUi.gen.output = "\n" 
+				//+ "rails -d mysql "
+				//+ RxUi.gen.outputDirectory + "/"
+				//+ RxUi.gen.projectName + "\n"										//create rails project
+				//+ "cd " + railsProject + "\n"										//change into rails directory
+				//+ "rm public/index.html" + "\n"									//removes index.html
+				//+ "cd ~/rx_projects" + "\n"											//change into scripts directory
+				//+ "ruby " + RxUi.gen.projectName + ".rb" + "\n"	//run ruby script
+				+ "cd " + railsProject + "\n"										//change into rails directory
+				+ "rm -rf vendor/plugins/schema_to_yaml" + "\n"								//FOR TESTING:
+				+ "rm app/flex/amanda/models/*" + "\n"												//FOR TESTING:
+				+ "rm app/flex/amanda/components/generated/*" + "\n"					//FOR TESTING:
+				+ "rm app/controllers/*" + "\n"																//FOR TESTING:
+				+ "rm app/models/*" + "\n"																		//FOR TESTING:
+				+ "cp for_testing/application.rb app/controllers/" + "\n"		//FOR TESTING:
+				//+ "ruby script/generate rx_config --skip-framework" + "\n"		//generate rx_config without swc
+				//+ "cp " + File.userDirectory.nativePath + "/rx_projects/restfulx-1.2.1.swc "
+				//+ railsProject + "/lib" + "\n"			//copies over rx swc file
+				+ "cp " + File.userDirectory.nativePath + "/rx_projects/plugins/schema_to_yaml/templates/schema_to_yaml.yml "
+				+ railsProject + "/config" + "\n"		//copies over schema_to_yaml settings file
+				+ "cp -a " + File.userDirectory.nativePath + "/rx_projects/plugins/* "
+				+ railsProject + "/vendor/plugins/" + "\n"			//copies over plugins
+				+ "rake db:drop" + "\n"													//FOR TESTING: drop database
+				+ "rake db:create" + "\n"												//create database
+				+ "rm -rf db/migrate" + "\n"										//FOR TESTING: remove old migrations
+				+ "ruby script/generate my_rx_scaffold" + "\n"	//run scaffold
+				+ "rake db:migrate" + "\n"											//migrate the database
+				+ "rake rx:flex:build" + "\n"										//build flex project
+				+ "rake annotate_models" + "\n"									//annotate models
+				+ "ruby script/server -p 1982" + "\n"						//start server on port 1982
+				;
+			}
+			
+			private function writeBatchFile():void {
+				var f:File = File.userDirectory;
+				f = f.resolvePath("rx_projects/" + RxUi.gen.projectName + "_scripts/" + RxUi.gen.projectName + ".sh");
+				
+        var stream:FileStream = new FileStream();
+        stream.open(f, FileMode.WRITE);
+        stream.writeUTFBytes(RxUi.gen.output);
+        stream.close();
+			}
+			
+			private function executeBatchFile():void {
+				var f:File = File.userDirectory;
+				f = f.resolvePath("rx_projects/" + RxUi.gen.projectName + "_scripts/" + RxUi.gen.projectName + ".sh");
+				var a:File = File.userDirectory;
+				a = a.resolvePath("rx_projects/" + RxUi.gen.projectName + "_scripts/" + RxUi.gen.projectName + ".appscript");
+				
+				var applescript:String = "tell application \"Terminal\"" + "\n"
+				+ "  launch" + "\n"
+				+ "  activate" + "\n"
+			  + "  if (count of windows) > 0 then" + "\n"
+				+ "    do script \"" + ". " + f.nativePath + "\"" + " in window 1" + "\n"
+				+ "  else" + "\n"
+			 	+ "    do script \"" + ". " + f.nativePath + "\"" + "\n"
+				+ "  end if" + "\n"
+				+ "end tell";
+				
+        var stream:FileStream = new FileStream();
+        stream.open(a, FileMode.WRITE);
+        stream.writeUTFBytes(applescript);
+        stream.close();
+				
+				// merapi calls
+				bridge.systemExecute(["chmod", "777", f.nativePath]);
+				bridge.systemExecute(["osascript", a.nativePath]);
+			}
+		
+			private function handleResult(event:ResultEvent):void {
+				trace("Current state: " + this.currentState);
+				trace("Event result: " + event.result);
+			}
+			
+			private function showModelsSection():void {
+				Application.application.mainViewStack.selectedChild = Application.application.models
+			}
+			
+    ]]>
+  </mx:Script>
+  
+  <mx:Text text="Welcome to the RestfulX Project Creator.  Choose a Rails Project Name and Directory to get started."
+  	fontSize="18" color="#00bff3" width="700"/>
+  <code:PromptingTextInput id="projectName" width="200" change="setProject()"
+  	x="10" y="68" prompt="Project Name" fontSize="22"/>
+	<mx:Button label="Browse..." click="showFolderSelection()"
+		fontSize="20" x="225" y="65" width="150" horizontalGap="10"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/32/direction_right.png')"/>
+  <mx:Button label="Models" click="showModelsSection()"
+		fontSize="40" x="8" y="120" width="350" horizontalGap="40"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/document_add.png')"/>
+	<mx:Button label="Layouts"
+		fontSize="40" x="370" y="120" width="350" horizontalGap="25"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/application.png')"
+	  enabled="false"/>
+	<mx:Button label="Charts"
+		fontSize="40" x="8" y="270" width="350" horizontalGap="50"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/piechart.png')"
+	  enabled="false"/>
+	<mx:Button id="createB" label="Create" click="runScript()"
+		fontSize="40" x="370" y="270" width="350" horizontalGap="50"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/128/notification_done.png')"
+	  enabled="false"/>
+  
+</mx:Canvas>

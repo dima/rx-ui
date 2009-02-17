@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" 
+  title="Choose Directory..." width="550" height="375"
+  color="#f3d300" fontSize="14" backgroundColor="#000000"
+	borderAlpha="1" borderColor="#000000"
+  horizontalAlign="center" verticalAlign="middle"
+	xmlns:extras="rxui.extras.*">
+
+	<mx:Script>
+    <![CDATA[
+    	import mx.managers.PopUpManager;
+    	
+	    private function setDirectory():void {
+	    	RxUi.gen.outputDirectory = fileList.selectedItem.nativePath;	
+	    }
+	    
+    ]]>
+	</mx:Script>
+	<mx:FileSystemTree id="fileList" width="95%" height="80%"
+ 		directory="{File.userDirectory}" click="setDirectory()"/>
+ 	<mx:Spacer height="5"/>
+ 	<mx:Button label="Close" click="PopUpManager.removePopUp(this);"
+		fontSize="14" horizontalGap="10"
+	  paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	  icon="@Embed(source='assets/icons/32/direction_down.png')"/>
+	
+</mx:TitleWindow>

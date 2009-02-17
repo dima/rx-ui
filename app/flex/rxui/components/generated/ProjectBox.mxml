@@ -26,6 +26,7 @@
       var project:Project = new Project();
       project.name = nameTextInput.text;
       project.notes = notesTextArea.text;
+      project.path = pathTextInput.text;
 
       project.create({onSuccess: onProjectCreate});
     }
@@ -33,6 +34,7 @@
     private function updateProject():void {
       _project.name = nameTextInput.text;
       _project.notes = notesTextArea.text;
+      _project.path = pathTextInput.text;
 
       _project.update({onSuccess: onProjectUpdate});
     }
@@ -63,7 +65,8 @@
     }
   ]]></mx:Script>
   <mx:Panel id="projectsPanel"
-    title="Projects" width="25%" height="100%">
+    title="Projects" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
     <mx:List id="projectsList"
       width="100%" height="100%"
       dataProvider="{Rx.models.index(Project)}"
@@ -73,13 +76,17 @@
         click="newProject()"/>
     </mx:ControlBar>
   </mx:Panel>
-  <mx:Panel title="Edit Project" width="75%" height="100%">
+  <mx:Panel title="Edit Project" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
     <mx:Form width="100%" height="100%">
       <mx:FormItem label="Name" width="100%">
         <mx:TextInput id="nameTextInput" width="100%" text="{_project.name}"/>
       </mx:FormItem>
       <mx:FormItem label="Notes" width="100%">
-        <mx:TextArea id="notesTextArea" width="100%" height="125" text="{_project.notes}"/>
+        <mx:TextArea id="notesTextArea" width="100%" height="200" text="{_project.notes}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Path" width="100%">
+        <mx:TextInput id="pathTextInput" width="100%" text="{_project.path}"/>
       </mx:FormItem>
     </mx:Form>
     <mx:ControlBar width="100%">
